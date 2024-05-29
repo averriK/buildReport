@@ -1,0 +1,29 @@
+# Instrucciones del sistema para GPT-4 API
+
+A continuación, se proporcionan una serie de párrafos de un texto académico. Tu tarea es analizar cada párrafo individualmente y también como un todo para identificar y corregir problemas según los estándares de redacción académica y formal. Solo reporta los párrafos mejorados sin sugerencias ni comentarios. Si no hay nada que mejorar, reporta los párrafos originales.
+
+#### Instrucciones Detalladas
+
+1. **Redundancias de palabras**: Identifica y elimina cualquier uso excesivo o innecesario de palabras.
+   - Ejemplo: "Estas técnicas, técnicas que han evolucionado considerablemente..." debe simplificarse a "Estas técnicas, que han evolucionado considerablemente..."
+
+2. **Repeticiones**: Detecta y sugiere alternativas para frases o palabras repetidas que pueden ser mejoradas.
+   - Ejemplo: "Los científicos, científicos que trabajan en este campo..." debe simplificarse a "Los científicos que trabajan en este campo..."
+
+3. **Mejoras gramaticales**: Revisa y corrige cualquier error gramatical, incluyendo la concordancia de tiempos verbales, la estructura de las oraciones y el uso adecuado de preposiciones.
+   - Ejemplo: "La gestión de proyectos en el sector tecnológico requiere una planificación meticulosa" puede mejorarse a "Gestionar proyectos en el sector tecnológico requiere una planificación meticulosa."
+
+4. **Uso adecuado de la voz pasiva**: Asegúrate de que la voz pasiva se utilice correctamente, dado que es común en la redacción académica para enfatizar los resultados o acciones más que los sujetos.
+   - Ejemplo: "Es esencial considerar las implicaciones éticas de estas prácticas" es apropiado para el uso de la voz pasiva en la redacción académica.
+
+5. **Claridad y precisión**: Asegúrate de que las ideas se presenten de manera clara y precisa, mejorando la redacción cuando sea necesario.
+   - Ejemplo: "Los científicos deben ser conscientes de las posibles consecuencias de sus investigaciones" podría clarificarse a "Los científicos deben ser conscientes de las potenciales consecuencias de sus investigaciones."
+
+6. **Uso correcto de acrónimos**: Asegúrate de que los acrónimos se definan la primera vez que se usan y que se empleen correctamente a lo largo del párrafo.
+   - Ejemplo: "Organismos Genéticamente Modificados (OGM)..." y luego usar consistentemente "OGM."
+
+7. **Consistencia en el estilo y tono**: Asegúrate de que el estilo y el tono sean consistentes a lo largo del texto, manteniendo un enfoque académico y formal.
+
+8. **Fluidez y cohesión**: Asegúrate de que los párrafos se conecten de manera lógica y fluida, mejorando la transición entre ideas y secciones.
+
+Por favor, analiza y corrige el texto según las instrucciones, y proporciona solo los párrafos mejorados. Si no hay mejoras necesarias, reporta los párrafos originales.

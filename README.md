@@ -1,1 +1,1 @@
-# buildDocument
+# smartDoc

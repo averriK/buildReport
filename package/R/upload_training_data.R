@@ -1,0 +1,34 @@
+# Convert the dataset to JSONL format and upload directly
+upload_training_data <- function(df, api_key) {
+  tryCatch({
+    # Convert the data frame to JSONL format
+    df$conversation <- apply(df, 1, format_chat)
+    jsonl_data <- sapply(df$conversation, toJSON, auto_unbox = TRUE)
+
+    # Create a temporary file to store JSONL data
+    tmp <- tempfile(fileext = ".jsonl")
+    con <- file(tmp, "w")
+    writeLines(jsonl_data, con)
+    close(con)
+
+    # Upload the training data
+    response <- request("https://api.openai.com/v1/files") %>%
+      req_auth_bearer_token(api_key) %>%
+      req_body_multipart(file = upload_file(tmp), purpose = "fine-tune") %>%
+      req_perform()
+
+    # Remove the temporary file
+    unlink(tmp)
+
+    # Process the response
+    if (response$status_code != 200) {
+      stop("Failed to upload training data. Status code: ", response$status_code)
+    }
+
+    content <- resp_body_json(response)
+    return(content$id)
+  }, error = function(e) {
+    warning("Error occurred during file upload: ", conditionMessage(e))
+    return(NULL)
+  })
+}

@@ -11,43 +11,25 @@ fine_tune_model <- function(file_id, api_key, interval = 10) {
     return(latest_model_id)
   }
 
-  fine_tune_id <- tryCatch({
-    # Create a fine-tuning job if the model doesn't already exist
-    fine_tune_id <- create_fine_tuning_job(file_id, api_key)
+  fine_tune_id <- create_fine_tuning_job(file_id, api_key)
 
-    if (is.null(fine_tune_id)) {
-      stop("Failed to create fine-tuning job.")
-    }
-
-    print(paste("Fine-tuning job ID:", fine_tune_id))
-    fine_tune_id
-
-  }, error = function(e) {
-    warning("An error occurred while creating the fine-tuning job: ", conditionMessage(e))
+  if (is.null(fine_tune_id)) {
+    warning("Failed to create fine-tuning job.")
     return(NULL)
-  })
+  }
 
-  # Initialize status before entering the loop
-  status <- tryCatch({
-    monitor_fine_tuning(fine_tune_id, api_key)
-  }, error = function(e) {
-    warning("An error occurred while monitoring the fine-tuning job: ", conditionMessage(e))
-    NULL
-  })
+  print(paste("Fine-tuning job ID:", fine_tune_id))
 
   # Monitor the fine-tuning job until it succeeds or fails
+  status <- monitor_fine_tuning(fine_tune_id, api_key)
+
   while (!is.null(status) && !(status %in% c("succeeded", "failed", "cancelled"))) {
     print(paste("Fine-tuning job status:", status))
 
     Sys.sleep(interval)  # Wait for the specified interval before checking again
 
-    status <- tryCatch({
-      monitor_fine_tuning(fine_tune_id, api_key)
-    }, error = function(e) {
-      warning("An error occurred while monitoring the fine-tuning job: ", conditionMessage(e))
-      NULL
-    })
+    status <- monitor_fine_tuning(fine_tune_id, api_key)
   }
 
-  return()
+  return(status)
 }

@@ -57,10 +57,17 @@ cat("Checking for existing fine-tuned models...\n")
 user_owned_models <- list_fine_tuned_models(api_key)
 print(user_owned_models)
 
-latest_model_id <- get_latest_model(user_owned_models)
+
+# Assuming we have recreated some models for further testing
+# Test deleting all models except the latest one
+cat("Deleting all models except the latest one...\n")
+delete_fine_tune_model("previous", api_key)
+
 
 # 4. Query the fine-tuned model if it succeeded
 if (status == "succeeded") {
+  latest_model_id <- get_latest_model(user_owned_models)
+  
   cat("Querying the fine-tuned model...\n")
   prompt <- "Translate to English: Забота об окружающей среде порой сложна и требует внимания."
   model_name <- latest_model_id
@@ -70,10 +77,6 @@ if (status == "succeeded") {
   cat("Fine-tuning job did not succeed. Skipping query.\n")
 }
 
-# Assuming we have recreated some models for further testing
-# Test deleting all models except the latest one
-cat("Deleting all models except the latest one...\n")
-delete_fine_tune_model("previous", api_key)
 
 # 6. Verify the deletion by listing models again
 cat("Verifying deletion of models...\n")

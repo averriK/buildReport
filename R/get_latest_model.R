@@ -1,4 +1,13 @@
 # Function to identify the latest model
+#' Title
+#'
+#' @param DT data.table
+#'
+#' @return
+#' @export
+#'
+#' @importFrom data.table :=
+#' @examples
 get_latest_model <- function(DT) {
   # Separate models with and without ckpt-step
   DT[, has_ckpt_step := grepl(":ckpt-step-", id)]

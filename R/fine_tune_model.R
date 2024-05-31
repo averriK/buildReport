@@ -1,4 +1,14 @@
 # Function to handle the entire fine-tuning workflow
+#' Title
+#'
+#' @param file_id The ID of the training file.
+#' @param api_key The API key for authentication.
+#' @param interval The interval (in seconds) at which to check the fine-tuning job status.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 fine_tune_model <- function(file_id, api_key, interval = 10) {
   # List all fine-tuned models
   user_owned_models <- list_fine_tuned_models(api_key)

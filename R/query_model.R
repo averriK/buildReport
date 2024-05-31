@@ -1,4 +1,16 @@
 # Generalized function to query a model
+#' Title
+#'
+#' @param prompt The prompt to send to the model
+#' @param api_key The API key for authentication
+#' @param model_name The name of the model to query
+#' @param max_tokens The maximum number of tokens to generate
+#' @param temperature The temperature for sampling
+#'
+#' @return
+#' @export
+#'
+#' @examples
 query_model <- function(prompt, api_key, model_name = "gpt-4", max_tokens = NULL, temperature = 0) {
   BODY <- list(
     model = model_name,

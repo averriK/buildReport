@@ -1,4 +1,12 @@
 # Function to get the max tokens for a model using the lookup table
+#' Title
+#'
+#' @param model_name string. Model name
+#'
+#' @return
+#' @export
+#'
+#' @examples
 get_max_tokens <- function(model_name) {
 
   max_tokens_lookup <- list(

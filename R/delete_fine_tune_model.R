@@ -1,4 +1,8 @@
-# Function to delete fine-tuned models
+#' Delete Fine-Tuned Models
+#' 
+#' @param model_ids A vector of model IDs to delete. If NULL, deletes all models except the latest.
+#' @param api_key The API key for authentication.
+#' @export
 delete_fine_tune_model <- function(model_ids = NULL, api_key) {
   if (is.null(model_ids)) {
     user_owned_models <- list_fine_tuned_models(api_key)

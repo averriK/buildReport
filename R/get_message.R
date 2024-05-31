@@ -1,4 +1,12 @@
 # Helper function to get the JSON message from the response
+#' Title
+#'
+#' @param response string
+#'
+#' @return
+#' @export
+#'
+#' @examples
 get_message <- function(response) {
   tryCatch({
     if (is.null(response)) stop("Received null response")

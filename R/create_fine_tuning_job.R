@@ -1,3 +1,9 @@
+#' Create Fine-Tuning Job
+#' 
+#' @param file_id The ID of the training file.
+#' @param api_key The API key for authentication.
+#' @return The ID of the created fine-tuning job.
+#' @export
 create_fine_tuning_job <- function(file_id, api_key) {
   URL <- "https://api.openai.com/v1/fine_tuning/jobs"
 

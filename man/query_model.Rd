@@ -7,7 +7,7 @@
 query_model(
   prompt,
   api_key,
-  model_name = "gpt-4",
+  model_name = "gpt-4o",
   max_tokens = NULL,
   temperature = 0
 )

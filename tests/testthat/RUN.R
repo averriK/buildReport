@@ -30,10 +30,13 @@ data <- data.frame(
 
 
 # Load the package
-# library(FineTuneAPI) # Uncomment this line if you have installed the package
 
 # Define API key and file ID for testing
 api_key <- Sys.getenv("OPENAI_API_KEY2")
+
+# Upload training data directly from the data frame
+file_id <- upload_training_data(data, api_key)
+
 # 1. Create and fine-tune the model
 cat("Creating fine-tuning job...\n")
 fine_tune_id <- create_fine_tuning_job(file_id, api_key)
@@ -67,11 +70,11 @@ if (status == "succeeded") {
   cat("Fine-tuning job did not succeed. Skipping query.\n")
 }
 
-# 5. Delete fine-tuned models (except the latest one if no specific model IDs are provided)
-cat("Deleting fine-tuned models...\n")
-delete_fine_tune_model(model_ids = NULL, api_key)
+# Assuming we have recreated some models for further testing
+# Test deleting all models except the latest one
+cat("Deleting all models except the latest one...\n")
+delete_fine_tune_model("previous", api_key)
 
 # 6. Verify the deletion by listing models again
 cat("Verifying deletion of models...\n")
-user_owned_models_after_deletion <- list_fine_tuned_models(api_key)
-print(user_owned_models_after_deletion)
+list_fine_tuned_models(api_key)

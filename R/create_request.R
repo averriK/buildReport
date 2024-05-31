@@ -44,18 +44,26 @@
 #     return(NULL)
 #   })
 # }
-
 create_request <- function(url, api_key, body = NULL, method = "GET") {
-  tryCatch({
-    req <- httr2::request(url) %>%
-      httr2::req_method(method) %>%
-      httr2::req_auth_bearer_token(api_key)
-    if (!is.null(body)) {
-      req <- req %>% httr2::req_body_json(body)
-    }
-    req
-  }, error = function(e) {
-    warning("Error: Failed to create request. ", conditionMessage(e))
-    return(NULL)
-  })
+  if (is.null(body)) {
+    req <- tryCatch({
+      httr2::request(url) %>%
+        httr2::req_method(method) %>%
+        httr2::req_auth_bearer_token(api_key)
+    }, error = function(e) {
+      warning("Error: Failed to create request without body. ", conditionMessage(e))
+      return(NULL)
+    })
+  } else {
+    req <- tryCatch({
+      httr2::request(url) %>%
+        httr2::req_method(method) %>%
+        httr2::req_auth_bearer_token(api_key) %>%
+        httr2::req_body_json(body)
+    }, error = function(e) {
+      warning("Error: Failed to create request with body. ", conditionMessage(e))
+      return(NULL)
+    })
+  }
+  return(req)
 }

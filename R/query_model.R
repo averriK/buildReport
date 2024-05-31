@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-query_model <- function(prompt, api_key, model_name = "gpt-4", max_tokens = NULL, temperature = 0) {
+query_model <- function(prompt, api_key, model_name = "gpt-4o", max_tokens = NULL, temperature = 0) {
   BODY <- list(
     model = model_name,
     messages = list(

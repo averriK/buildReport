@@ -7,21 +7,24 @@
 query_model(
   prompt,
   api_key,
-  model_name = "gpt-4o",
+  model_name = "gpt-4",
   max_tokens = NULL,
-  temperature = 0
+  temperature = 0,
+  debug = FALSE
 )
 }
 \arguments{
-\item{prompt}{The prompt to send to the model}
+\item{prompt}{string. The prompt to send to the model}
 
-\item{api_key}{The API key for authentication}
+\item{api_key}{string. The API key for authentication}
 
-\item{model_name}{The name of the model to query}
+\item{model_name}{string. The name of the model to query}
 
-\item{max_tokens}{The maximum number of tokens to generate}
+\item{max_tokens}{integer. he maximum number of tokens to generate}
 
-\item{temperature}{The temperature for sampling}
+\item{temperature}{integer. The temperature for sampling}
+
+\item{debug}{boolean. Whether to print debug information}
 }
 \description{
 Title

@@ -1,0 +1,114 @@
+---
+bibliography: references.bib
+---
+
+## Blast-Induced Ground Motions Model for Lagoa Do Violao
+
+### Objectives
+
+The Blast-induced ground motions (BIGM) model provides an estimate of confidence intervals of peak-particle velocity $ppv$, peak-ground accelerations $pga$ and Newmark-based residual displacements $D_n$ asociated with a given blasting scenario and target site. In the present context, a blasting scenario is defined by the MIC (charge-per-delay), the number and plan configuration of the boreholes, the sequence of activation times (firing time) of each borehole, the dynamic characteristics of an individual detonation (blasting signature), the lithology of the surrounding rocks (PPV critical) and the uncertainity model (risk rating) adopted for the project. A target site is defined in terms of its geotechnical site conditions (shear-wave velocity), the shear strength and geometry of critical slopes (yield coefficient) and the distance to the blasting area.
+
+The main objectives of the present chapter are the following:
+
+-   Select suitable wave-forms due to individual detonations (blasting signatures) from the vibration monitoring database of the S11D mine.
+
+-   Build waveforms of ground acceleration and velocity (seismic ground motions) from an arbitrary blasting sequence and MIC, incorporating the random variability of firing times and lithology.
+
+-   Train a statistical (machine-Learning) models for peak-particle velocities \*$ppv$), peak-particle accelerations $ppa$, peak-ground accelerations $pga$ and Newmark displacements $D_n$ expected at a given target (safe) distance, for a given blasting sequences, MIC, geotechnical site conditions and lithology at the pit's influence zone.
+
+### Blast Signature $s_*(t)$.
+
+The blast signature is the waveform obtained by detonating a single borehole, scaled to a unit charge. The blast signature is a waveform that represents pressure as a function of time, and is used among other applications, to determine the energy of the explosion, the detonation velocity, the maximum pressure, and the duration of the pressure wave. The blast signature is also used to evaluate the effectiveness of the blast to predict the damage caused by the explosion. The seed waveform sets the shape of the single blasthole signature with amplitude $|s_*(t)|\leq1$. For the present report, the single-blast seed has been obtained from field recordings of similar projects. The recorded single-blast velocities for radial $sV_L(t)$, transverse $sV_T(t)$ and vertical $sV_V(t)$ directions, are shown in the following figures.
+
+{{< include qmd/_fig-VT.qmd >}}
+
+*For the adoption of admissible ranges of peak particle velocities, it is recommended to use waveforms obtained in the S11D mining area, which incorporate the particular characteristics of the surrounding rock quality and detonation conditions. (WORK IN PROGRESS: SELECT SITE-BASED BLAST SIGNATURES )*
+
+### Peak-particle velocity ($ppv$)
+
+The atttenuation model allow to estimate the relationship between the peak particle velocities $ppv$, the explosive charge $Q_{max}$ and the distance to the detonation point $r$. The parametric models used by blasting design codes and classical literature, are generally formulated in terms of the scaled distance to the site, defined as the ratio between the distance to the site and the square root of the explosive mass.
+
+$$ppv_j^* \approx k \left( \frac {r_j} {\sqrt{Q_j}} \right)^{-b} \varepsilon $$
+
+where $ppv_j^*$ s the peak-particle velocity of the blasthole $j^{th}$ at the component $*$, $h_j$ is the target distance in $m$, $Q_j$ is the charge per delay (MIC) in $kg$ and $\varepsilon$ is a standard normal variate with mean $\mu_{\varepsilon}=0$ and standard deviation $\sigma_{\varepsilon}$. The model parameters $k$ and $b$ can be calibrated from field tests on site. The $k$ parameter depends on the confinement, the rock properties, the spacial distribution and coupling of the energy sources, and the timming scatter. The exponent $b$ is higher for body waves in very close proximity to the blast and smaller where surface waves dominate.
+
+*Previous studies (ITV Report): For the S11D mine, a linear parametric attenuation model was proposed in the form $ln(ppv_j) \approx a + b\ ln(r_j) + c \ ln(Q_j)$, where the parameters $a$, $b$ and $c$ were calibrated for different lithologies, with the purpose of understanding the attenuation of vibrations through different types of rock formations in Vale mines. The model was calibrated with a dataset containing 165 records of peak particle velocity $ppv$, distances to the detonation point $r$, and charges per delay unit $Q_{max}$ for transversal, vertical and longitudinal directions. The regression model reported a Pearson coefficient $R^2\sim 0.80$ and a standard error of approximately $\sigma_{ln PPV}\approx 1.13$.*
+
+
+The critical particle velocity $ppv_c = \sigma_{t} \ C_p/E_o$ is defined as the minimum particle velocity required to induce a tensile failure in the rock mass, and is directly related with the tensile strength $\sigma_t$ and elastic moduli $E_o$ of the rock mass, and the wave propagation velocity $C_p$. The critical particle velocity $ppv_c$ is a key parameter in the design of blasting sequences, as it allows estimating the maximum particle velocities that can be induced in the rock mass without inducing tensile failure.
+
+*Previous studies (ITV Report): Table 6 reports the critical particle velocities $ppv_c$ for different lithologies in Vale mining sites, with ranges between 250 and 1500 mm/s*
+
+In order to reduce the root mean square error RMSE of the peak particle velocity attenuation models, it is possible to include the critical particle velocity $ppv_C$ as a characteristic parameter of each mining sector, understanding this parameter as an indirect estimator of the stiffness of the surrounding rocks. For the Lagoa do Violao project, four statistical learning models were also implemented and tested.
+
+-   A 9-parameter linear regression model, based on nine parameters, which reported a coefficient of determination $R^2\sim 0.78$ and a standard error of approximately $RMSE=\sigma_{ln PPV}\approx 0.92$.
+-   A non-parametric model based on the randomForest algorithm, which reported a coefficient of determination $R^2\sim 0.95$ and a standard error of approximately $RMSE=\sigma_{ln PPV}\approx 0.43$.
+-   A non-parametric model based on the k-NN algorithm, which reported a coefficient of determination $R^2\sim 0.94$ and a standard error of approximately $RMSE=\sigma_{ln PPV}\approx 0.50$.
+
+The following table presents a summary of mean square error (MSE), the root mean square error (RMSE) and coefficient of determination ($R^2$) for all models.
+
+{{< include qmd/_tbl-AE.qmd >}}
+
+
+All models include as independent variables the direction of the wave (radial, transverse and vertical), the distance to the detonation point $R$ in milimeters, the critical particle velocity $ppv_C$ in mm/s (as a direct indicator of the lithology) and the charge per delay unit $Q_{max}$ in kg. The independent variables were combined under different transformations (inverses, natural logarithms) to improve the fit in parametric models. The hyper-parameters and confidence intervals, were validated with the `caret` R Package [@kuhn2013], using cross-validation and bootstrapping methods.
+
+### Peak-particle acceleration ($ppa$)
+
+Peak particle accelerations $ppa$ are the maximum absolute value of the acceleration time-histories at outcrop level $ppa\approx max(|\ddot u_R(t)|)$. When accelerations time-histories are not available, peak-particle accelerations $ppa$ can be estimated the in terms of regression models calibrated for peak values obtained from different blasting scenarios. 
+
+Peak-ground velocities $ppv_*$, peak-ground accelerations $a_*$, and peak-ground displacements $d_*$ are bound to the theoretical limit $(ppv_*)^2 \leq \ 2 \ ppa_* \ ppd_*$. For seismic ground motions, it is generally satisfied that $(ppv_*)^2 \approx \ 1/15 \sim 1/5 \ ppa_* \ ppd_*$ @Newmark1967. Given that peak-ground displacements $ppd$ are generally unknown during the monitoring of a single detonation, the use of regression models based only on peak values $ppv$ assumes a large dispersion of the value of $ppa$ due to the variability of the dynamic properties of the soils and rocks in the detonation's influence zone.
+
+*Previous studies (ITV Report): Peak-particle accelerations $ppa$ were estimated using the expression $ppa\approx c \ f \ ppv$, where $ppa$ is the peak-particle acceleration (assumed in bedrock), $ppv$ is the peak particle velocity, $f$ is the seismic signal frequency, and $c\approx 6.41E-4$. This model assumes a narrow-band process where the seismic movement can be approximated with a single characteristic frequency (harmonic). It is typically used for the analysis of longitudinal deformations in rock tunnels exposed to strong seismic movements from distant sources. Since $ppa$ represent the dynamic response of a broadband process, with a frequency spectrum dependent on the dynamic properties of the site, particularly of the uppermost overlying strata, the estimation of $ppa$ based only in chacarteristic frequencies can lead to underestimation of the maximum accelerations in soft soils or highly fractured rocks.*
+
+In the present model, acceleration time-histories $\ddot u_R(t)$ at bedrock level were obtained by numerical derivation of velocity time-histories $\dot u_R(t)$ obtained by stacking a large number of single-blast waveforms (blasting signatures) (@eq-A1). To minimize aliasing, trending, and noise effects associated with the derivation of high-frequency signals, numerical derivatives and integrals were performed in the frequency domain, using the short-time Fourier transform (STFT). The following figures show peak-particle accelerations $ppa$ obtained from a single detonation for the radial, transverse and vertical directions
+
+{{< include qmd/_fig-AT.qmd >}}
+
+### Peak-ground acceleration ($pga$)
+
+The dynamical properties of the stratified soils generally affect the amplitude and frequency content of shear waves propagating from the bedrock to the surface. The estimation of dynamic site response can be achieved by utilizing a scalar amplification factor that is dependent on the average shear-wave velocity $\bar{v}_S$, as outlined in ASCE/SEI 7-22. The peak-ground acceleration $pga(\bar{v}_S)$ expected at sites characterized by an average shear-wave velocity $\bar{v}_S$ can be derived from the peak-particle acceleration on rock $ppa$ from the following expression
+
+$$pga(\bar v_S) \approx F(\bar v_S) \ ppa$$ {#eq-SAS}
+
+where $F(\bar v_S)$ is the multi-period site factor and $ppa$ is the peak-particle acceleration on rock in rocks (A) or firm soils (BC). The model proposed by @Stewart2017 is a three-component model dependent on shear-wave velocities $\bar v_S$ and can be used for both hard rock with $v_{ref}$ of 3000 m/s or soft rock with $v_{ref}$ of 760 m/s reference values.
+
+$$\mathrm{ln}\ F \approx \beta_{BC} +\beta_{A} +\beta_{NL}+\varepsilon$$ {#eq-AF}
+
+where $\beta_{BC}$ is a scaling term relative to $\bar v_S$ = 760 m/s, $\beta_{A}$ is amplification at $\bar v_S$ = 760 m/s relative to $v_{ref}$ = 3000 m/s and $\beta_{NL}$ is a factor that considers non-linear effects, which has strong influence in soft-soil conditions.
+
+The error term $\varepsilon$ from @Stewart2017 is a log-normal random variable, with mean $E[\varepsilon]\approx 0$ and variance $\mathrm{Var}[\varepsilon]\approx \sigma_F^2$. Because the peak-particle velocities in rock are actually random variables, with conditional expectation $s_a(T_n)$ and variance $\sigma_A^2$, the error term from this model has been adapted to incorporate the blasting vibrations uncertainty:
+
+$$\mathrm{Var}[\varepsilon]\approx \sigma_F^2+\sigma_{A}^2$$
+
+### Ground Motions Time-Histories. Stacking Model.
+
+The velocity time-history $v(t)$ generated by an arbitrary sequence can be obtained by superimposing the time-history records due to single-blast seed $s^*(t)$. Based in the methodologies proposed by Blair *et al* [-@Blair1993a,-@Blair1999,-@Blair2001,-@Blair2004a] the velocity time-history can disturbed by a chaotic filter to account for the expected differences in the individual blasting waveform. For a given component $*$ (i.e. radial $s_L(t)$, transverse $s_T(t)$ or vertical $s_V(t)$) of the single blasthole seed vibration $s_*(t)$ the total simulated vibration $v_*(t)$ due to a production blast of $N_B$ blast holes can be obtained from:
+
+$$v_*(t) \approx \sum_{j=1}^{NB} A_j\,(\sqrt{(1-R_o)}\,s_*(t-d_j)+\sqrt{R_o}\,  n_*^j(t-d_j))$$ {#eq-A1}
+
+where $A_j$ is the total amplitude in $mm/s$, $R_o$ is the relative amount of noise energy, and $n_*^j(t)$ is a chaotic noise waveform for the component $*$ dependent upon the $j^{th}$ blasthole. According to Blair, the first term on the right-hand side of the equation represents the total amount of coherent energy in the waveform of the $j^{th}$ blast hole, whilst the second term represents the total amount of random energy. From this model, $R_o=0$ implies that all blasthole waveforms are identical (perfect correlated) and $R_o=1$ implies that there is no correlation between signatures of any of the blastholes.
+
+Given the velocity time history for a single blast $s^*(t)$, the randomness due to the finite-duration random component of the $j^{th}$ blast hole in a production blast can be obtained by convolving the seed function $s^*(t)$ with an array $r_j\,(t)$ of random-amplitude Dirac delta functions $\delta(t)$. The random noise waveform $n_*^j(t)$ for the component $*$ at the blasthole $j$ can be obtanied from:
+
+$$n_*^j(t) \approx \dfrac{\sqrt{R_o}}{\sum\limits_{k=1}^{m} {r_{j,k}^2}} \sum_{k=1}^{m} {r_{j,k}\,s_*\,(t-d_j-k\,\Delta t)}$$ {#eq-A2}
+
+where $r_{j,k}$ is a random number in $[-1,+1]$, $\Delta t$ is the time sample interval for the waveform, and $m\,\Delta t = T_o$ is the total duration of the random component associated with each blasthole.
+
+Field experience showed that even identically charged blast holes can yield significant variations in their vibration signature, [@Blair1999] and realistic blasting record should consider phase-delayed vibration signatures. Given a blast event, the total time $d_j$ employed for a single waveform to reach the base of the target site will be the travel time ${t_w}^j$ plus the surface delay ${t_h}^j$ and in-hole delay ${t_o}^j$. The travel time can be obtained from $t_w\approx h_j/V_G$, where $V_G$ is the average shear-wave velocity at bedrock level and $h_j$ is the target distance in $m$. The surface delay can be considered as a normal random variable with a mean value given by the blasting design and a c.o.v ranging between 4 to 10%.
+
+$$ d_j\approx {t_h}^j + h_j/V_G + {t_o}^j$$
+
+The following figure shows the waveforms of the stacked signal for an arbitrary blasting sequence, assuming 80 blastholes with a maximum charge-per-delay $Q_{max}=$ 100 kg and firing intervals separated by 9 ms. The layout assumed two single lines of 100 m length each. The stacked signal has been sampled at 100 Hz and processed with a low-pass filter with a cutoff frequency of 25 Hz and antialias filters with.
+
+{{< include qmd/_fig-VTG.qmd >}}
+
+### Newmark Displacements $D_n$
+
+The maximum acceptable displacement $d_c$ and the maximum accelerations at the base of the slopes $pga$, allow the definition of performance-based $ppv$ ranges. Acceptability criteria for critical slope displacements, $d_c$ can be defined in terms on the consequences of the failure of a critical slope. (i.e. potential impact of the failure of the slope on the environment,potential impact of the failure of the slope on the safety of the mine workers, etc. If it is assumed that the slope materials do not change their stiffness during cyclic deformations (i.e. do not liquefy), a reasonable approximation of the expected permanent deformations of potential failure wedges can be obtained by the Newmark Sliding Block Model [@Newmark1965],[@Jibson1993],[@Wilson1984a]. Newmark's algorithm allows the integration of convoluted acceleration histories with a limiting strength value given by the yield coefficient $k_y$. The following figure shows the residual displacements time-history of an equivalent Newmark block, assuming a yield coefficient $k_y\sim$ 0.05, 
+ 
+
+{{< include qmd/_fig-Dn.qmd >}}
+
+Blasting associated with mining exposes slopes to short seismic motions that result in residual deformations, $\delta_{max}$, that build up over the sequence of blasting events.  The maximum residual displacements $\delta_{max}$ expected at the target site, can be obtained by the sum (build-up) of the expected values of the random variable $\Delta$ for all possible events and the critical particle velocity $PPV_c$ will be defined as not exceeding the threshold of accumulated residual deformations $\Delta_{max}$ during the mine's exposure period $T_E$. Due to the random nature of blast-induced seismic motion, the residual displacement $\delta^{(k)}$ must be considered as a single realisation of a random variable $\Delta$ with conditional mean $\eta_{\Delta}(D,Q_{max})$ and variance $\sigma_{\Delta}^2$ to be obtained by an ML model. 
+
+In following chapters, a conceptual framework (hazard model) of analysis based on the theorem of total probability is presented, which will allow to formulate a simple probabilistic model to estimate the annual probability of exceeding peak particle velocities, conditioned to a threshold of acceptable maximum residual displacements.

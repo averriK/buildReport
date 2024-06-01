@@ -1,7 +1,7 @@
 #' Delete Fine-Tuned Models
 #' 
-#' @param model_ids A vector of model IDs to delete. If NULL, deletes all models except the latest.
-#' @param api_key The API key for authentication.
+#' @param models character vector. A vector of model IDs to delete. If NULL, deletes all models except the latest.
+#' @param api_key string. The API key for authentication.
 #' @export
 delete_fine_tune_model <- function(models = NULL, api_key) {
   DT <- list_fine_tuned_models(api_key)

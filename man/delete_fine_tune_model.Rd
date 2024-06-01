@@ -4,12 +4,12 @@
 \alias{delete_fine_tune_model}
 \title{Delete Fine-Tuned Models}
 \usage{
-delete_fine_tune_model(model_ids = NULL, api_key)
+delete_fine_tune_model(models = NULL, api_key)
 }
 \arguments{
-\item{model_ids}{A vector of model IDs to delete. If NULL, deletes all models except the latest.}
+\item{models}{character vector. A vector of model IDs to delete. If NULL, deletes all models except the latest.}
 
-\item{api_key}{The API key for authentication.}
+\item{api_key}{string. The API key for authentication.}
 }
 \description{
 Delete Fine-Tuned Models

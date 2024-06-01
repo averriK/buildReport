@@ -4,12 +4,14 @@
 \alias{create_fine_tuning_job}
 \title{Create Fine-Tuning Job}
 \usage{
-create_fine_tuning_job(file_id, api_key)
+create_fine_tuning_job(file_id, api_key, debug = FALSE)
 }
 \arguments{
-\item{file_id}{The ID of the training file.}
+\item{file_id}{string. The ID of the training file.}
 
-\item{api_key}{The API key for authentication.}
+\item{api_key}{string. The API key for authentication.}
+
+\item{debug}{boolean. Logical indicating whether to print debug information.}
 }
 \value{
 The ID of the created fine-tuning job.

@@ -1,11 +1,12 @@
 # Generalized function to query a model
 #' Title
 #'
-#' @param prompt The prompt to send to the model
-#' @param api_key The API key for authentication
-#' @param model_name The name of the model to query
-#' @param max_tokens The maximum number of tokens to generate
-#' @param temperature The temperature for sampling
+#' @param prompt string. The prompt to send to the model
+#' @param api_key string. The API key for authentication
+#' @param model_name string. The name of the model to query
+#' @param max_tokens integer. he maximum number of tokens to generate
+#' @param temperature integer. The temperature for sampling
+#' @param debug boolean. Whether to print debug information
 #'
 #' @return
 #' @export

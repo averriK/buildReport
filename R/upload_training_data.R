@@ -1,7 +1,6 @@
-# Convert the dataset to JSONL format and upload directly
 #' Title
 #'
-#' @param df data.table
+#' @param DT data.table
 #' @param api_key The API key for authentication.
 #'
 #' @return
@@ -12,11 +11,13 @@
 #' @importFrom httr upload_file
 #'
 #' @examples
-upload_training_data <- function(df, api_key) {
+#' 
+# Convert the dataset to JSONL format and upload directly
+upload_training_data <- function(DT, api_key) {
   tryCatch({
     # Convert the data frame to JSONL format
-    df$conversation <- apply(df, 1, format_chat)
-    jsonl_data <- sapply(df$conversation, jsonlite::toJSON, auto_unbox = TRUE)
+    DT$conversation <- apply(DT, 1, format_chat)
+    jsonl_data <- sapply(DT$conversation, jsonlite::toJSON, auto_unbox = TRUE)
 
     # Create a temporary file to store JSONL data
     tmp <- tempfile(fileext = ".jsonl")
@@ -44,4 +45,13 @@ upload_training_data <- function(df, api_key) {
     warning("Error occurred during file upload: ", conditionMessage(e))
     return(NULL)
   })
+}
+
+format_chat <- function(row) {
+  list(
+    messages = list(
+      list(role = "user", content = row["prompt"]),
+      list(role = "assistant", content = row["response"])
+    )
+  )
 }

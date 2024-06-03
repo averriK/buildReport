@@ -18,7 +18,7 @@ list_fine_tuned_models <- function(api_key) {
   DT <- data.table::rbindlist(content$data, fill = TRUE)
 
   # Filter out models owned by OpenAI ("openai", "system")
-  user_owned_models <- DT[!(owned_by %in% c("openai", "system"))]
+  user_owned_models <- DT[!(owned_by %in% c("openai", "system","openai-internal"))]
 
   return(user_owned_models)
 }

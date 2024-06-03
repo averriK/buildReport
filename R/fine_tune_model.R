@@ -17,7 +17,7 @@ fine_tune_model <- function(file_id, api_key, interval = 10) {
   if (nrow(user_owned_models) > 0 && any(grepl(file_id, user_owned_models$id))) {
     existing_model <- user_owned_models[grepl(file_id, id)]
     latest_model_id <- get_latest_model(existing_model)
-    print(paste("Model associated with the file_id already exists. Model ID:", latest_model_id))
+    warning("Model associated with the file_id already exists. Model ID:", latest_model_id)
     return(latest_model_id)
   }
 

@@ -4,10 +4,10 @@
 \alias{get_response}
 \title{Title}
 \usage{
-get_response(req)
+get_response(request_object)
 }
 \arguments{
-\item{req}{string}
+\item{request_object}{string}
 }
 \description{
 Title

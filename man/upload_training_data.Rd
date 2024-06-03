@@ -4,12 +4,12 @@
 \alias{upload_training_data}
 \title{Title}
 \usage{
-upload_training_data(df, api_key)
+upload_training_data(data, api_key)
 }
 \arguments{
-\item{df}{data.table}
+\item{data}{data.table. The data.table containing the user and assistant data.}
 
-\item{api_key}{The API key for authentication.}
+\item{api_key}{string. The API key for authentication.}
 }
 \description{
 Title

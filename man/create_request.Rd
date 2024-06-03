@@ -4,7 +4,7 @@
 \alias{create_request}
 \title{Title}
 \usage{
-create_request(url, api_key, body = NULL)
+create_request(url, api_key, body = NULL, method = "GET")
 }
 \arguments{
 \item{url}{string. The URL for the request.}
@@ -12,6 +12,8 @@ create_request(url, api_key, body = NULL)
 \item{api_key}{string. The API key for authentication.}
 
 \item{body}{string. The body of the request.}
+
+\item{method}{string. The method of the request, GET,DELETES}
 }
 \description{
 Title

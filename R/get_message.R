@@ -11,12 +11,8 @@ get_message <- function(response) {
   tryCatch({
     httr2::resp_body_json(response)
   }, error = function(e) {
-    status_code <- tryCatch({
-      response$status_code
-    }, error = function(inner_e) {
-      "Unknown status code"
-    })
-    stop("Error parsing the response: Possible reasons could be an invalid response structure or server error. Status code: ", status_code, ". Details: ", conditionMessage(e))
+    
+    stop("Error parsing the response: Possible reasons could be an invalid response structure or server error.  Details: ", conditionMessage(e))
     
     # return(NULL)
   })

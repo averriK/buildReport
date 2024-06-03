@@ -24,7 +24,7 @@ query_model <- function(prompt, api_key, model_name = "gpt-4o", temperature = 0)
   )
   tryCatch({
     # Create the HTTP request
-    REQ <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
+    REQ <- get_request(url = URL, api_key = api_key, body = BODY, method = "POST")
     # Perform the HTTP request
     RESP <- get_response(REQ)
     # Parse the response body JSON
@@ -55,7 +55,7 @@ query_model <- function(prompt, api_key, model_name = "gpt-4o", temperature = 0)
 #   )
 #   
 #   tryCatch({
-#     # REQ <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
+#     # REQ <- get_request(url = URL, api_key = api_key, body = BODY, method = "POST")
 #     
 #     REQ <- tryCatch({
 #       httr2::request(URL) |>

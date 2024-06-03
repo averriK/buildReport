@@ -5,7 +5,7 @@
 #' @param model_id The ID of the model to be deleted.
 #' @export
 perform_delete_request <- function(url, api_key, model_id) {
-  req <- create_request(url, api_key, method = "DELETE")
+  req <- get_request(url, api_key, method = "DELETE")
   
   if (is.null(req)) {
     warning("Failed to create request for model ", model_id)

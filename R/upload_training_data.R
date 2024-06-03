@@ -40,13 +40,10 @@ upload_training_data <- function(data, api_key) {
     })
     
     # Step 4: Perform the request
-    RESP <- tryCatch({
-      httr2::req_perform(REQ)
-    }, error = function(e) {
-      stop("Request failed: This could be due to network issues, server problems, or firewall settings. Details:", conditionMessage(e))
-    })
-    
-    return(RESP)
+    RESP <- get_response(REQ)
+    CONTENT <- httr2::resp_body_json(RESP)
+    return(CONTENT$id)
+
   }, error = function(e) {
     warning("An error occurred during the data upload process:", conditionMessage(e))
     return(NULL)

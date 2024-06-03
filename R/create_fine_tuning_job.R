@@ -9,17 +9,17 @@
 
 create_fine_tuning_job <- function(file_id, api_key, debug = FALSE) {
   URL <- "https://api.openai.com/v1/fine_tuning/jobs"
-  
-  # Create the request body
  
-  BODY <- list(
-    model = "gpt-3.5-turbo",
-    training_file = file_id,
-    suffix = "custom_model"
-  )
-  browser()
+
   tryCatch({
-    REQ <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
+    # Validate the file_id
+    validate_file_id(file_id)
+    BODY <- list(
+      model = "gpt-3.5-turbo",
+      training_file = file_id,
+      suffix = "custom_model"
+    )
+    REQ <- get_request(url = URL, api_key = api_key, body = BODY, method = "POST")
     RESP <- get_response(REQ)
     MESSAGE <- get_message(RESP)
     ID <- MESSAGE$id
@@ -30,6 +30,20 @@ create_fine_tuning_job <- function(file_id, api_key, debug = FALSE) {
   })
   
   
+}
+
+validate_file_id <- function(file_id) {
+  if (!is.character(file_id)) {
+    stop("file_id must be a character string")
+  }
+  
+  # Check if file_id follows the expected pattern
+  pattern <- "^file-[a-zA-Z0-9]+$"
+  if (!grepl(pattern, file_id)) {
+    stop("Invalid file_id format. It should match the pattern: 'file-[a-zA-Z0-9]+'")
+  }
+  
+  return(TRUE)
 }
 
 

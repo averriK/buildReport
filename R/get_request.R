@@ -14,7 +14,7 @@
 #' 
 #' 
 
-create_request <- function(url, api_key, body = NULL, method = "GET") {
+get_request <- function(url, api_key, body = NULL, method = "GET") {
   request_object <- tryCatch({
     if (is.null(body)) {
       httr2::request(url) |>

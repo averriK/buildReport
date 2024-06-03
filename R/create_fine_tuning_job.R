@@ -7,7 +7,7 @@
 #' @return The ID of the created fine-tuning job.
 #' @export
 
-create_fine_tuning_job <- function(file_id, api_key, debug = FALSE) {
+create_fine_tuning_job <- function(file_id, api_key, debug = TRUE) {
   URL <- "https://api.openai.com/v1/fine_tuning/jobs"
   
   # Create the request body

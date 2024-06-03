@@ -26,7 +26,7 @@ query_model <- function(prompt, api_key, model_name = "gpt-4o",  temperature = 0
     REQUEST <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
     RESPONSE <- get_response(REQUEST)
     MESSAGE <- get_message(RESPONSE)
-    return(MESSAGE$choices[[1]]$message$content)
+    MESSAGE$choices[[1]]$message$content
   }, error = function(e) {
     warning("Error occurred during query: ", conditionMessage(e))
     return(NULL)

@@ -15,7 +15,7 @@
 #' 
 
 create_request <- function(url, api_key, body = NULL, method = "GET") {
-  req <- tryCatch({
+  request_object <- tryCatch({
     if (is.null(body)) {
       httr2::request(url) |>
         httr2::req_method(method) |>
@@ -31,7 +31,7 @@ create_request <- function(url, api_key, body = NULL, method = "GET") {
     warning("Error creating the request: Possible reasons could be an invalid URL, invalid API key, or network issues. Details: ", conditionMessage(e))
     return(NULL)
   })
-  return(req)
+  return(request_object)
 }
 
 

@@ -11,11 +11,13 @@ create_fine_tuning_job <- function(file_id, api_key, debug = FALSE) {
   URL <- "https://api.openai.com/v1/fine_tuning/jobs"
   
   # Create the request body
+ 
   BODY <- list(
     model = "gpt-3.5-turbo",
     training_file = file_id,
     suffix = "custom_model"
   )
+  browser()
   tryCatch({
     REQ <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
     RESP <- get_response(REQ)

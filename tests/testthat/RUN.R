@@ -36,6 +36,8 @@ devtools::load_all()
 file_id <- upload_training_data(training_data, api_key)
 
 # 1. Create and fine-tune the model
+devtools::load_all()
+
 cat("Creating fine-tuning job...\n")
 fine_tune_id <- create_fine_tuning_job(file_id, api_key)
 cat("Fine-tuning job ID:", fine_tune_id, "\n")

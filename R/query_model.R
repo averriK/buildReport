@@ -11,28 +11,22 @@
 #'
 #' @examples
 query_model <- function(prompt, api_key, model_name = "gpt-4o",  temperature = 0) {
+  
+  URL <- "https://api.openai.com/v1/chat/completions"
+  BODY <- list(
+    model = model_name,
+    messages = list(
+      list(role = "user", content = prompt)
+    ),
+    max_tokens = NULL,
+    temperature = temperature
+  )
+  
   CONTENT <- tryCatch({
-    URL <- "https://api.openai.com/v1/chat/completions"
-    
-    BODY <- list(
-      model = model_name,
-      messages = list(
-        list(role = "user", content = prompt)
-      ),
-      max_tokens = NULL,
-      temperature = temperature
-    )
-    
     REQUEST <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
     RESPONSE <- get_response(REQUEST)
     MESSAGE <- get_message(RESPONSE)
-    
-    CONTENT <- MESSAGE$choices[[1]]$message$content
-    
-    
-    
-    
-    return(CONTENT)
+    return(MESSAGE$choices[[1]]$message$content)
   }, error = function(e) {
     warning("Error occurred during query: ", conditionMessage(e))
     return(NULL)

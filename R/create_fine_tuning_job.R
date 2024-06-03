@@ -7,7 +7,7 @@
 #' @return The ID of the created fine-tuning job.
 #' @export
 
-create_fine_tuning_job <- function(file_id, api_key, debug = TRUE) {
+create_fine_tuning_job <- function(file_id, api_key, debug = FALSE) {
   URL <- "https://api.openai.com/v1/fine_tuning/jobs"
   
   # Create the request body
@@ -16,44 +16,18 @@ create_fine_tuning_job <- function(file_id, api_key, debug = TRUE) {
     training_file = file_id,
     suffix = "custom_model"
   )
+  tryCatch({
+    REQ <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
+    RESP <- get_response(REQ)
+    MESSAGE <- get_message(RESP)
+    ID <- MESSAGE$id
+    return(ID)
+  }, error = function(e) {
+    warning("Error occurred during fine-tuning job creation:", conditionMessage(e))
+    return(NULL)
+  })
   
-  if (debug) {
-    # Debugging: Print the request body
-    cat("Debug: Request body:\n")
-    print(BODY)
-  }
   
-  REQUEST <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
-  RESPONSE <- get_response(REQUEST)
-  
-  if (debug) {
-    # Debugging: Print the raw response
-    cat("Debug: Raw response:\n")
-    print(RESPONSE)
-  }
-  
-  MESSAGE <- get_message(RESPONSE)
-  
-  if (debug) {
-    # Debugging: Print the parsed message
-    cat("Debug: Parsed message:\n")
-    print(MESSAGE)
-  }
-  
-  ID <- get_id(MESSAGE)
-  
-  if (is.null(ID)) {
-    warning("Failed to retrieve the fine-tuning job ID.")
-    if (!debug) {
-      # Print the raw response and parsed message in case of error, even if debug is FALSE
-      cat("Debug: Raw response:\n")
-      print(RESPONSE)
-      cat("Debug: Parsed message:\n")
-      print(MESSAGE)
-    }
-  }
-  
-  return(ID)
 }
 
 

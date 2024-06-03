@@ -10,7 +10,8 @@ Imports:
     jsonlite,
     httr,
     stringr,
-    digest
+    digest,
+    brio
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

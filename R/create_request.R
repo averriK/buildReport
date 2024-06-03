@@ -28,8 +28,8 @@ create_request <- function(url, api_key, body = NULL, method = "GET") {
     }
     
   }, error = function(e) {
-    warning("Error creating the request: Possible reasons could be an invalid URL, invalid API key, or network issues. Details: ", conditionMessage(e))
-    return(NULL)
+    stop("Error creating the request: Possible reasons could be an invalid URL, invalid API key, or network issues. Details: ", conditionMessage(e))
+    # return(NULL)
   })
   return(request_object)
 }

@@ -32,6 +32,7 @@ training_data <- data.frame(
 api_key <- Sys.getenv("OPENAI_API_KEY2")
 
 # Upload training data directly from the data frame
+devtools::load_all()
 file_id <- upload_training_data(training_data, api_key)
 
 # 1. Create and fine-tune the model
@@ -63,8 +64,10 @@ delete_fine_tune_model("previous", api_key)
 cat("Verifying deletion of models...\n")
 list_fine_tuned_models(api_key)
 
-
-
+# 10. Query response
+devtools::load_all()
+prompt <- "Translate to English: Забота об окружающей среде порой сложна и требует внимания."
+query_response <- query_model(prompt, api_key)
 # 10. Query the fine-tuned model if it succeeded
 if (status == "succeeded") {
   latest_model_id <- get_latest_model(user_owned_models)

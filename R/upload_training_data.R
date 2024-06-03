@@ -9,28 +9,49 @@
 #' @importFrom jsonlite toJSON
 #' @importFrom httr2 request req_auth_bearer_token req_body_multipart req_perform
 #' @importFrom httr upload_file
-#'
+#' @importFrom brio writeLines
 #' @examples
-#' 
-# Convert the dataset to JSONL format and upload directly
+#'
 
 upload_training_data <- function(data, api_key) {
+  URL <- "https://api.openai.com/v1/files"
+  tmp <- tempfile(fileext = ".jsonl")
+  on.exit(unlink(tmp), add = TRUE)
+  
   tryCatch({
+    # Step 1: Create JSON data
     JSON <- create_JSON(data)
-    BODY <- create_body_upload(JSON)
-    URL <- "https://api.openai.com/v1/files"
-    REQUEST <- create_request(url = URL, api_key = api_key, body = BODY, method = "POST")
-    RESPONSE <- get_response(REQUEST)
-    MESSAGE <- get_message(RESPONSE)
     
-    if (is.null(MESSAGE)) {
-      stop("Failed to upload training data.")
-    }
+    # Step 2: Write JSON data to a temporary file
+    tryCatch({
+      brio::writeLines(JSON, tmp)
+    }, error = function(e) {
+      stop("Failed to write JSON data to file. Check file permissions, available disk space, and the file path. Details", conditionMessage(e))
+    })
     
-    return(MESSAGE$id)
+    # Step 3: Create the HTTP request
+
+    REQ <- tryCatch({
+      httr2::request(URL) |>
+        httr2::req_auth_bearer_token(api_key) |>
+        httr2::req_body_multipart(file = httr::upload_file(tmp), purpose = "fine-tune")
+    }, error = function(e) {
+      stop("Error creating HTTP request: Possible causes include issues with network connectivity, the API key, or constructing the request body. Details", conditionMessage(e))
+    })
+    
+    # Step 4: Perform the request
+    RESP <- tryCatch({
+      httr2::req_perform(REQ)
+    }, error = function(e) {
+      stop("Request failed: This could be due to network issues, server problems, or firewall settings. Details:", conditionMessage(e))
+    })
+    
+    return(RESP)
   }, error = function(e) {
-    warning("Error occurred during file upload: ", conditionMessage(e))
+    warning("An error occurred during the data upload process:", conditionMessage(e))
     return(NULL)
   })
 }
+
+
 

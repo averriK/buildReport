@@ -16,9 +16,9 @@ get_message <- function(response) {
     }, error = function(inner_e) {
       "Unknown status code"
     })
-    warning("Error parsing the response: Possible reasons could be an invalid response structure or server error. Status code: ", status_code, ". Details: ", conditionMessage(e))
+    stop("Error parsing the response: Possible reasons could be an invalid response structure or server error. Status code: ", status_code, ". Details: ", conditionMessage(e))
     
-    return(NULL)
+    # return(NULL)
   })
 }
 

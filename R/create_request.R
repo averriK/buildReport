@@ -10,28 +10,28 @@
 #' @export
 #'
 #' @examples
+#' 
+#' 
+#' 
+
 create_request <- function(url, api_key, body = NULL, method = "GET") {
-  if (is.null(body)) {
-    req <- tryCatch({
-      req <- httr2::request(url) |> 
-        httr2::req_method(method) |> 
+  req <- tryCatch({
+    if (is.null(body)) {
+      httr2::request(url) |>
+        httr2::req_method(method) |>
         httr2::req_auth_bearer_token(api_key)
-      req
-    }, error = function(e) {
-      warning("Error: Failed to create request without body. ", conditionMessage(e))
-      return(NULL)
-    })
-  } else {
-    req <- tryCatch({
-      req <- httr2::request(url) |> 
-        httr2::req_method(method) |> 
-        httr2::req_auth_bearer_token(api_key) |> 
+    } else {
+      httr2::request(url) |>
+        httr2::req_method(method) |>
+        httr2::req_auth_bearer_token(api_key) |>
         httr2::req_body_json(body)
-      req
-    }, error = function(e) {
-      warning("Error: Failed to create request with body. ", conditionMessage(e))
-      return(NULL)
-    })
-  }
+    }
+    
+  }, error = function(e) {
+    warning("Error creating the request: Possible reasons could be an invalid URL, invalid API key, or network issues. Details: ", conditionMessage(e))
+    return(NULL)
+  })
   return(req)
 }
+
+

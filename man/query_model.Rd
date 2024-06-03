@@ -8,7 +8,6 @@ query_model(
   prompt,
   api_key,
   model_name = "gpt-4",
-  max_tokens = NULL,
   temperature = 0,
   debug = FALSE
 )
@@ -19,8 +18,6 @@ query_model(
 \item{api_key}{string. The API key for authentication}
 
 \item{model_name}{string. The name of the model to query}
-
-\item{max_tokens}{integer. he maximum number of tokens to generate}
 
 \item{temperature}{integer. The temperature for sampling}
 

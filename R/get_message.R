@@ -8,10 +8,6 @@
 #'
 #' @examples
 get_message <- function(response) {
-  if (is.null(response)) {
-    warning("Received null response")
-    return(NULL)
-  }
   tryCatch({
     httr2::resp_body_json(response)
   }, error = function(e) {
@@ -20,20 +16,11 @@ get_message <- function(response) {
     }, error = function(inner_e) {
       "Unknown status code"
     })
-    warning("Error: Failed to parse response. ", conditionMessage(e),
-            " Status code: ", status_code)
+    warning("Error parsing the response: Possible reasons could be an invalid response structure or server error. Status code: ", status_code, ". Details: ", conditionMessage(e))
+    
     return(NULL)
   })
 }
 
-# get_message <- function(response) {
-#   tryCatch({
-#     if (is.null(response)) stop("Received null response")
-#     httr2::resp_body_json(response)
-#   }, error = function(e) {
-#     warning("Error: Failed to parse response. ", conditionMessage(e),
-#             " Status code: ", response$status_code)
-#     return(NULL)
-#   })
-# }
+
 

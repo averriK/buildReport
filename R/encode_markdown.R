@@ -10,7 +10,7 @@
 #' @importFrom utils tail
 #'
 #' @examples
-encode <- function(text, language = "ES") {
+encode_markdown <- function(text, language = "ES") {
   LANG <- language
   
   # Ensure the text ends with a newline

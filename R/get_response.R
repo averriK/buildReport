@@ -7,11 +7,13 @@
 #' @export
 #'
 #' @examples
+
+
 get_response <- function(req) {
   tryCatch({
     httr2::req_perform(req)
   }, error = function(e) {
-    warning("Error: Failed to perform the request. ", conditionMessage(e))
+    warning("Error performing the request: Possible reasons could be network issues or server unavailability. Details: ", conditionMessage(e))
     return(NULL)
   })
 }

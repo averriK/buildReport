@@ -1,0 +1,25 @@
+1. Tarea 1. Tengo un catalogo de motherboards de la marca Asus y micros de la marca Intel.
+
+En este enlace hay un catalogo de familia de motherboards marca Asus
+https://rog.asus.com/motherboards-group/
+
+# Tarea 2. 
+Te voy a proporcional un grupo de Motherboard marca Asus Por ejemplo, [FamiliaMother]=Rog Maximus
+Deberas verificar si [FamiliaMother] existe en el catalogo de Asus, y si existe, deberas buscar en internet la tabla de modelos de motherboards de esta familia.
+
+Por ejemplo, para  [FamiliaMother]=Rog Maximus, el enlace de internet  que tiene la informacion que necesitamos es 
+https://rog.asus.com/motherboards/rog-maximus-series/?FilterLevelTagId=77&items=1550
+
+Si no existe, deberas informarme que he ingresado mal la familia de Motherboards, y sugerirme modelos similares. ,porqu puedo haber escrito incorrectamente el nombre de la familia de motherboards.
+
+# Tarea 3.
+Te voy a proporcionar una familia de microprocesadores intel. Por ejemplo [FamiliaMicro]=i9
+Si no existe, deberas informarme que he ingresado mal la familia de microprocesadores, y sugerirme modelos similares. ,porqu puedo haber escrito incorrectamente el nombre de la familia de microprocesadores.
+Quiero que selecciones del catalogo de motherboards de [FamiliaMother], cuales son los microprocesadores de la [FamiliaMicro] mas modernos y mas rapidos compatibles con esta familia de motherboards.
+
+# Tarea 4
+Te voy a proporcionar la cantidad de memoria RAM maxima que necesito, [MaximaRAM] para mi computador con motherboard de la familia [FamiliaMother] y microprocesador de la familia [FamiliaMicro]
+Quiero que selecciones los modelos de motherboards de la familia [FamiliaMother] que soporten la cantidad de memoria RAM maxima [MaximaRAM] y que sean compatibles con los microprocesadores de la familia [FamiliaMicro]
+
+# Tarea 5.
+

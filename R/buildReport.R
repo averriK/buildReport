@@ -1,3 +1,4 @@
+# nolint start
 buildReport <- function(
     projectFolder = ".",
     buildFolder = "_build",
@@ -219,3 +220,4 @@ buildReport <- function(
         stop(e)
     })
 }
+# nolint end

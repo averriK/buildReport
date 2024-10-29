@@ -13,7 +13,13 @@ buildReport <- function(
     output_format = c("html", "docx"),
     deploy = FALSE
 ) {
-    # First include .buildYAML and its dependency .validAuthor
+    # Check if project is initialized
+    if (!dir.exists(file.path(projectFolder, "_yml")) || 
+        !dir.exists(file.path(projectFolder, "_extensions"))) {
+        stop("Project structure not initialized. Please run init_project() first.")
+    }
+
+    # First include .validAuthor helper
     .validAuthor <- function(author) {
         fields_to_check <- c("name", "orcid", "email")
         for (field in fields_to_check) {
@@ -22,6 +28,9 @@ buildReport <- function(
     }
 
     .buildYAML <- function(language="ES", output_format=c("html","docx","els-pdf"), output_dir=exportFolder) {
+        # Get the yml path - this is now the standard location
+        yml_path <- file.path(projectFolder, "_yml")
+        
         if(!dir.exists(output_dir)) dir.create(output_dir)
         LANG <- language
         
@@ -34,47 +43,47 @@ buildReport <- function(
         ), engine="knitr", jupyter="python3")
         DATA <- c(DATA, FIELD)
         
-        # Handle references.bib
-        PATH <- projectFolder
-        FILE <- list.files(file.path(PATH), pattern = "references\\.bib$", recursive = TRUE, full.names = TRUE)
+        # Handle references.bib from project folder
+        FILE <- list.files(projectFolder, pattern = "references\\.bib$", recursive = TRUE, full.names = TRUE)
         if(length(FILE)==1) {
-            VAR <- FILE
-            FIELD <- list(bibliography=VAR)
+            FIELD <- list(bibliography=FILE)
             DATA <- c(DATA, FIELD)
         }
 
-        # Handle _authors.yml
-        FILE <- list.files(file.path(PATH), pattern = "_authors\\.yml$", recursive = TRUE, full.names = TRUE)
-        if(length(FILE)==1) {
-            FIELD <- read_yaml(FILE, readLines.warn=FALSE)
-            FIELD$author <- Filter(.validAuthor, FIELD$author)
-            DATA <- c(DATA, FIELD)
+        # Handle _authors.yml from _yml folder
+        FILE <- file.path(yml_path, "_authors.yml")
+        if(!file.exists(FILE)) {
+            stop("Required file '_authors.yml' not found in _yml folder")
         }
+        FIELD <- read_yaml(FILE, readLines.warn=FALSE)
+        FIELD$author <- Filter(.validAuthor, FIELD$author)
+        DATA <- c(DATA, FIELD)
         
-        # Handle build folder files
-        PATH <- buildFolder
-        FILE <- list.files(file.path(PATH), pattern = "_params\\.yml$", recursive = TRUE, full.names = TRUE)
-        if(length(FILE)==1) {
+        # Handle _params.yml
+        FILE <- file.path(yml_path, "_params.yml")
+        if(file.exists(FILE)) {
             FIELD <- read_yaml(FILE, readLines.warn=FALSE)
             DATA <- c(DATA, FIELD)
         }
         
-        FILE <- list.files(file.path(PATH), pattern = "styles\\.docx$", recursive = TRUE, full.names = TRUE)
-        if(length(FILE)==1) {
-            VAR <- FILE
-            FIELD <- list("reference-doc"=VAR)
+        # Handle styles.docx
+        FILE <- file.path(yml_path, "styles.docx")
+        if(file.exists(FILE)) {
+            FIELD <- list("reference-doc"=FILE)
             DATA <- c(DATA, FIELD)
         }
 
-        FILE <- list.files(file.path(PATH), pattern = "_format\\.yml$", recursive = TRUE, full.names = TRUE)
-        if(length(FILE)==1) {
-            FIELD <- read_yaml(FILE, readLines.warn=FALSE)
-            FIELD$format <- FIELD$format[names(FIELD$format) %in% output_format]
-            if("els-pdf" %in% names(FIELD$format) && is.null(FIELD$format$`els-pdf`$journal$name)) {
-                FIELD$format$`els-pdf`$journal$name <- gsub(DATA$subtitle, pattern="\n", replacement="")
-            }
-            DATA <- c(DATA, FIELD)
+        # Handle _format.yml
+        FILE <- file.path(yml_path, "_format.yml")
+        if(!file.exists(FILE)) {
+            stop("Required file '_format.yml' not found in _yml folder")
         }
+        FIELD <- read_yaml(FILE, readLines.warn=FALSE)
+        FIELD$format <- FIELD$format[names(FIELD$format) %in% output_format]
+        if("els-pdf" %in% names(FIELD$format) && is.null(FIELD$format$`els-pdf`$journal$name)) {
+            FIELD$format$`els-pdf`$journal$name <- gsub(DATA$subtitle, pattern="\n", replacement="")
+        }
+        DATA <- c(DATA, FIELD)
         
         # Language-dependent stage
         if(dir.exists(file.path(renderFolder, LANG))) {
@@ -84,11 +93,13 @@ buildReport <- function(
         }
         LDATA <- list()
         
-        FILE <- list.files(file.path(buildFolder), pattern = "_crossref\\.yml$", recursive = TRUE, full.names = TRUE)
-        if(length(FILE)==1) {
-            FIELD <- read_yaml(FILE, readLines.warn=FALSE)
-            LDATA <- c(LDATA, FIELD[[LANG]])
+        # Handle _crossref.yml from _yml folder
+        FILE <- file.path(yml_path, "_crossref.yml")
+        if(!file.exists(FILE)) {
+            stop("Required file '_crossref.yml' not found in _yml folder")
         }
+        FIELD <- read_yaml(FILE, readLines.warn=FALSE)
+        LDATA <- c(LDATA, FIELD[[LANG]])
         
         # Handle title, subtitle, and abstract
         for(doc_type in c("TITLE", "SUBTITLE", "ABSTRACT")) {
@@ -115,7 +126,7 @@ buildReport <- function(
         TEXT <- YAML |> 
             gsub(pattern=":\\s*yes($|\\n)", replacement=": true\\1") |> 
             gsub(pattern=":\\s*no($|\\n)", replacement=": false\\1")
-        FILE <- file.path(".", quarto_filename)
+        FILE <- file.path(projectFolder, quarto_filename)
         brio::write_lines(text=TEXT, path=FILE)
     }
 
@@ -199,24 +210,22 @@ buildReport <- function(
         return(parsed)
     }
 
-    # [Previous code for .preRender and .postRender remains the same]
-    
-    # Main execution flow remains the same
+    # Main execution flow
     tryCatch({
-        .preRender()
+        if(exists(".preRender")) .preRender()
         .buildYAML(
             language = language,
             output_format = output_format,
             output_dir = publishFolder
         )
-        quarto::quarto_render(input = index_filename)
-        .postRender()
+        quarto::quarto_render(input = file.path(projectFolder, index_filename))
+        if(exists(".postRender")) .postRender()
         if (deploy) {
             system2("netlify", args = c("deploy --prod"))
         }
     }, error = function(e) {
         message("Error during rendering: ", e$message)
-        .postRender()
+        if(exists(".postRender")) .postRender()
         stop(e)
     })
 }

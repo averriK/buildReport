@@ -1,0 +1,23 @@
+author:
+  - name: Alejandro Verri Kozlowski
+    email: averri@srk.com.ar
+    attributes:
+      corresponding: true
+    affiliations:
+      id: SRK
+      name: SRK Consulting
+      department: Earthquake Engineering
+      city: Mendoza
+      country: Argentina
+  - name: Anna Fonseca
+    email: anna.fonseca@krystallos.ca
+    attributes:
+      corresponding: true
+    affiliations:
+      id: SRK
+      name: Kristallos
+      department: Structural Geology
+      city: Almaty
+      country: Kazakhstan
+
+      
